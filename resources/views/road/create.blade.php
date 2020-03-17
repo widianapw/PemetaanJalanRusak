@@ -83,7 +83,7 @@
     var markers=[];
     function initMap() {
         map = new google.maps.Map(document.getElementById('mapPicker'), {
-            center: {lat:-8.672716, lang:115.226089},
+            center: {lat:-8.672716, lng:115.226089},
             zoom: 13
         });
         geocoder = new google.maps.Geocoder();
