@@ -56,7 +56,7 @@
         
         map = new google.maps.Map(document.getElementById('map'), {
             disableDefaultUI: true,
-            center: {lat:-8.796253, lang:115.176385},
+            center: {lat:-8.796253, lng:115.176385},
             zoom: 13,
             styles : styles['hide'],
             mapTypeControl : false,

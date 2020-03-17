@@ -53,13 +53,18 @@
     var map, infoWindow;
       function initMap() {
         var sv = new google.maps.StreetViewService();
-        
+        var pos = {  
+            lat: -8.672716,
+            lng: 115.226089,
+        };
         map = new google.maps.Map(document.getElementById('map'), {
             disableDefaultUI: true,
-            center: {lat:-8.672716, lang:115.226089},
+            center: {lat:-8.796253, lang:115.176385},
             zoom: 13,
             styles: styles['hide']
         });
+        map.setZoom(15);
+        map.setCenter(pos);
         infoWindow = new google.maps.InfoWindow;
         // if (navigator.geolocation) {
         //   navigator.geolocation.getCurrentPosition(function(position) {

@@ -61,6 +61,12 @@
             styles : styles['hide'],
             mapTypeControl : false,
         });
+        var pos = {  
+            lat: -8.672716,
+            lng: 115.226089,
+        };
+        map.setZoom(15);
+        map.setCenter(pos);
 
         
 

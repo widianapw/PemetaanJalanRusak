@@ -56,12 +56,17 @@
         
         map = new google.maps.Map(document.getElementById('map'), {
             disableDefaultUI: true,
-             
-            center: {lat:-8.672716, lang:115.226089},
+            center: {lat:-8.672716,lng: 115.226089},
             zoom: 13,
             styles : styles['hide'],
           
         });
+        var pos = {  
+            lat: -8.672716,
+            lng: 115.226089,
+        };
+        map.setZoom(15);
+        map.setCenter(pos);
         infoWindow = new google.maps.InfoWindow;
         // if (navigator.geolocation) {
         //   navigator.geolocation.getCurrentPosition(function(position) {
