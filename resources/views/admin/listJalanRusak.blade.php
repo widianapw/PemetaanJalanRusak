@@ -19,7 +19,7 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $m->address }}</td>
-                <td>{{$m->description}}</td>
+                <td>{{ $m->description}}</td>
                 <td>
                     @if($m->status == '0')
                         Belum Diverifikasi
@@ -29,46 +29,63 @@
                         Sudah Diperbaiki
                     @endif
                 </td>
-                <th>
-                    <button class="btn-primary" data-toggle="modal" data-target="#myModal">Ubah Status</button>
-                </th>
+                <td>
+                <button data-item="{{$m->id}}" id="btnUbah" class="btn btn-warning" data-toggle="modal" data-target="#myModal" style="color:white">Ubah Status</button>
+                </td>
+                <td>
+                <form action="/jalan/{{$m->id}}" method="post">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-danger" type="submit"><i class="fa fa-trash"></i></button>
+                </form>
+                </td>
             </tr>
-            <div class="modal fade" id="myModal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
             
-                        <!-- Modal Header -->
-                        <div class="modal-header">
-                            <h4 class="modal-title">Ubah Status</h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-            
-                        <!-- Modal body -->
-                        <form action="/jalan/{{$m->id}}" method="POST" class="form-group">
-                        @method('PUT')
-                        @csrf
-                        <div class="modal-body">
-                        
-                            <p>Status:</p>
-                            <select name="status" class="form-control">
-                                <option value="0">Belum Diverifikasi</option>
-                                <option value="1">Sudah Diverifikasi</option>
-                                <option value="2">Sudah Diperbaiki</option>
-                            </select>
-                        
-                        </div>
-            
-                        <!-- Modal footer -->
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-success" >Submit</button>
-                        </div>
-                    </form>
-                    </div>
-                </div>
-            </div>
             @endforeach
+
         </tbody>
     </table>
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+    
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Ubah Status</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+    
+                <!-- Modal body -->
+                <form id="lineitem" action="/jalan/{{$m->id}}" method="POST" class="form-group">
+                @method('PUT')
+                @csrf
+                <div class="modal-body">
+                    <p>Status:</p>
+                {{-- <input style="display:none;" type="text" name="id" value="{{$m->id}} "> --}}
+                    <select name="status" class="form-control">
+                        <option value="0">Belum Diverifikasi</option>
+                        <option value="1">Sudah Diverifikasi</option>
+                        <option value="2">Sudah Diperbaiki</option>
+                    </select>
+                
+                </div>
+    
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" >Submit</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
 </div>
-
+@endsection
+@section('javascript')
+<script>
+$('#btnUbah').on("click", function () {
+    var itemid= $(this).attr('data-item');
+    console.log(itemid);
+    $("#lineitem").attr("action","/jalan/"+itemid)
+ });
+</script>
 @endsection

@@ -46,11 +46,15 @@
             <label for="nim">Deskripsi</label>
         </div>
         <textarea type="text" class="form-control" name="description" required></textarea>
-
+        
         <br>
         <div class="form-footer">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
+
+        <input type="text" id="jalanInput" name="jalan" hidden>
+        <input type="text" id="kecamatanInput" name="kecamatan" hidden>
+        <input type="text" id="kotaInput" name="kota" hidden>
 </form>
 
 <div class="modal fade" id="myModal">
@@ -122,6 +126,7 @@
             lngMap = e.latLng.lng();
             $('#latInput').val(latMap);
             $('#lngInput').val(lngMap);
+
             var marker = new google.maps.Marker({
                 map: map,
                 draggable: true,
@@ -137,6 +142,9 @@
                     if (results[0]) {
                         console.log(results[0]);
                         $('#addressInput').val(results[0].formatted_address);
+                        $('#jalanInput').val(results[0].address_components[1].long_name);
+                        $('#kecamatanInput').val(results[0].address_components[3].long_name);
+                        $('#kotaInput').val(results[0].address_components[4].long_name);
                     }
                 }
             });

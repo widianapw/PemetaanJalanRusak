@@ -44,6 +44,12 @@
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link {{ Request::is('admin/digitasiJalan') ? 'active' : '' }}"
+                            href="/admin/digitasiJalan" aria-expanded="false" data-target="#submenu-3"
+                            aria-controls="submenu-3"><i class="fas fa-fw fa-road"></i>Digitasi Jalan</a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link {{ Request::is('admin/listPengguna') ? 'active' : '' }}"
                             href="/admin/listPengguna" aria-expanded="false" data-target="#submenu-3"
                             aria-controls="submenu-3"><i class="fas fa-fw fa-user"></i>Manajemen Pengguna</a>

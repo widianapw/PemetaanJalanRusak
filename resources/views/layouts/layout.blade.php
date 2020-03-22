@@ -5,6 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{URL::asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}">
     <link href="{{URL::asset('assets/vendor/fonts/circular-std/style.css')}}" rel="stylesheet">
@@ -26,7 +27,7 @@
         <!-- ============================================================== -->
         <div class="dashboard-header">
             <nav class="navbar navbar-expand-lg bg-white fixed-top">
-                <a class="navbar-brand" href="/">Topik Khusus</a>
+                <a class="navbar-brand" href="/">SIG</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -120,7 +121,7 @@
     <script src="{{URL::asset('assets/vendor/slimscroll/jquery.slimscroll.js')}}"></script>
     <!-- main js -->
     <script src="{{URL::asset('assets/libs/js/main-js.js')}}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC4Kci4iYfmBJ0_DOJDE-UOEOyHVi6pv4&callback=initMap" async
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC4Kci4iYfmBJ0_DOJDE-UOEOyHVi6pv4&libraries=places&callback=initMap" async
     defer></script>
     @yield('javascript')
     {{-- <!-- chart chartist js -->

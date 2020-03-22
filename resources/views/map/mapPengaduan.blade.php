@@ -1,32 +1,16 @@
-@extends('layouts.layoutMap')
+@extends('layouts.layout')
 
 @section('title','Map Jalan Rusak Pengaduan')
 @section('judul','Map Jalan Rusak Pengaduan')
-@section('content')
-<input type="text" id="search" class="form-control" placeholder="Search...">
-<hr>
-<div style="display:none" id="searchBox" class="table-responsive table-borderless">
-    <h4>Total Data : <span id="total_records"></span></h4>
-    <table class="table table-striped table-bordered">
-     <thead>
-      <tr>
-       <th>Alamat</th>
-       <th>Deskripsi</th>
-      </tr>
-     </thead>
-     <tbody>
 
-     </tbody>
-    </table>
-   </div>
-@endsection
-@section('content1')
+@section('content')
 <style>
     #map {
         height: 500px;
         width: 100%;
     }
 </style>
+<input type="text" class="form-control" id="search" placeholder="Search..."><br>
 <div id="map"></div>
 <div class="modal fade" id="myModal">
     <div class="modal-dialog">
@@ -53,78 +37,128 @@
     var map, infoWindow;
       function initMap() {
         var sv = new google.maps.StreetViewService();
+        
+        map = new google.maps.Map(document.getElementById('map'), {
+            disableDefaultUI: true,
+            center: {lat:-8.796253, lang:115.176385},
+            zoom: 14,
+            styles: styles['hide']
+        });
         var pos = {  
             lat: -8.672716,
             lng: 115.226089,
         };
-        map = new google.maps.Map(document.getElementById('map'), {
-            disableDefaultUI: true,
-            center: {lat:-8.796253, lang:115.176385},
-            zoom: 13,
-            styles: styles['hide']
-        });
-        map.setZoom(15);
+        map.setZoom(13);
         map.setCenter(pos);
-        infoWindow = new google.maps.InfoWindow;
-        // if (navigator.geolocation) {
-        //   navigator.geolocation.getCurrentPosition(function(position) {
-        //     console.log(position.coords.longitude);
-        //     var pos = {
+        
+        var input = document.getElementById('search');
+        var searchBox = new google.maps.places.SearchBox(input);
+        geocoder = new google.maps.Geocoder();
+        var markers=[];
+        
+        map.addListener('bounds_changed',function(){
+            searchBox.setBounds(map.getBounds());
+        });
+
+        searchBox.addListener('places_changed',function(){
+            var places = searchBox.getPlaces();
+
+            if(places.length === 0)
+                return;
             
-        //       lat: position.coords.latitude,
-        //       lng: position.coords.longitude,
-        //     };
+            markers.forEach(function(m){
+                m.setMap(null);
+            });
+            markers = [];
 
-        //     infoWindow.setPosition(pos);
-        //     infoWindow.setContent("<i class='fa fa-user'></i> Posisi anda saat ini");
-        //     infoWindow.open(map);
-        //     map.setZoom(15);
-        //     map.setCenter(pos);
+            var bounds = new google.maps.LatLngBounds();
 
-        //   }, function() {
-        //     handleLocationError(true, infoWindow, map.getCenter());
-        //   });
-        // } else {
-        //   // Browser doesn't support Geolocation
-        //   handleLocationError(false, infoWindow, map.getCenter());
-        // }
+            places.forEach(function(p){
+                if(!p.geometry)
+                    return;
+                
+                markers.push(new google.maps.Marker({
+                    map :map,
+                    title : p.name,
+                    position: p.geometry.location
+                }));
+
+                if(p.geometry.viewport)
+                    bounds.union(p.geometry.viewport);
+                else
+                    bounds.extend(p.geometry.location);
+            });
+            map.fitBounds(bounds);
+        });
+
+
+        infoWindow = new google.maps.InfoWindow;
 
         $.ajax({
             url: 'getJalanPengaduan',
             type: 'get',
             dataType: 'json',
             success: function(response){
-                
                 $.each(response, function(i, obj){
-                    var pos = {
-                        lat: response[i].latitude,
-                        lng: response[i].longitude
-                    };
-                    var marker = new google.maps.Marker({
-                        map: map,
-                        position: {lat: response[i].latitude, lng: response[i].longitude}
+                    
+                    var poly = new google.maps.Polyline({
+                        geodesic: true,
+                        strokeColor: '#FF0000',
+                        strokeOpacity: 2.0,
+                        strokeWeight: 5
                     });
-                    marker.addListener('click', function(e){
-                        infoWindow.setPosition(pos)
-                        infoWindow.setContent("<div style='text-align:center'><img height='100px' alt='...' width = 'auto' src={{asset('images/small')}}/"+response[i].picture+"></div>"+
-                        "<b>alamat : </b>"+ response[i].address
-                        +"<br><br><b>Deskripsi : </b>"+ response[i].description
-                        +"<br><hr><button class='btn-success btn-block' id='streetView' data-toggle='modal' data-target='#myModal'>360 View</button>");
-                        
-                        infoWindow.open(map);
-                        $('#streetView').on('click',function(e){
-                            var panorama = new google.maps.StreetViewPanorama(
-                                document.getElementById('pano'), {
-                                position: {lat: response[i].latitude, lng: response[i].longitude},
-                                pov: {
-                                    heading: 240,
-                                    pitch: 0
-                                },
-                                visible: true
-                            });
-                            
+                    poly.setMap(map)
+                    var path = [];
+                    if(response[i].detail_digitasi.length>1){
+                        var arr_coor = response[i].detail_digitasi;
+                        $.each(arr_coor, function(j, obj){
+                            path.push(new google.maps.LatLng(arr_coor[j].latitude, arr_coor[j].longitude));
                         });
+                        poly.setPath(path);   
+                    }
+                    var detailMarker;
+                    poly.addListener('click', function(e){
+                        $.ajax({
+                            url: 'getDetailJalanPengaduan/'+response[i].nama,
+                            type: 'get',
+                            dataType: 'json',
+                            success: function(response1){
+                                infoWindow.setPosition(e.latLng);
+                                console.log(response1.jumlah)
+                                infoWindow.setContent("<b>"+response[i].nama+"</b><br>jumlah Pengaduan: "+response1.jumlah
+                                    +"<hr><button class='btn btn-primary btn-sm' data-toggle='modal' data-target='#myModal' id='streetView'>Street View</button>"
+                                    +"<button class='btn btn-success btn-sm' id='detailJalan'>Detail</button>");
+                                infoWindow.open(map);
+                                map.setCenter(e.latLng);
+                                $(document).on('click','#detailJalan',function(){
+                                    window.location="detailJalan/"+response[i].nama;
+                                });
+                                detailMarker = response1.data;
+                                $.each(detailMarker, function(k,obj2){
+                                    console.log(detailMarker[k]);
+                                    var marker = new google.maps.Marker({
+                                        map: map,
+                                        position: {lat: detailMarker[k].detail_coordinate[0].latitude, lng: detailMarker[k].detail_coordinate[0].longitude}
+                                    });
+                                    marker.addListener('click',function(a){
+                                        infoWindow.setPosition(a.latLng)
+                                        infoWindow.setContent("<div style='text-align:center'><img height='100px' alt='...' width = 'auto' src={{asset('images/small')}}/"+detailMarker[i].picture+"></div>"
+                                        +"<hr><button class='btn-success btn-block' id='streetView1' data-toggle='modal' data-target='#myModal'>360 View</button>");
+                                        infoWindow.setMap(map);
+                                        $(document).on('click','#streetView1',function(){
+                                            panoramaView(a.latLng);
+                                        });
+                                    });
+                                });
+                                $(document).on('click','#streetView',function(){
+                                    panoramaView(e.latLng);
+                                });
+                                
+                            }
+                        });
+                        
                     });
+
                 });
             }
         });
@@ -144,13 +178,19 @@
            ]
        }
 
-    //   function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    //     infoWindow.setPosition(pos);
-    //     infoWindow.setContent(browserHasGeolocation ?
-    //                           'Error: The Geolocation service failed.' :
-    //                           'Error: Your browser doesn\'t support geolocation.');
-    //     infoWindow.open(map);
-    //   }
+       function panoramaView(myLatLng){
+            var panorama = new google.maps.StreetViewPanorama(
+                document.getElementById('pano'), {
+                position: myLatLng,
+                pov: {
+                    heading: 240,
+                    pitch: 0
+                },
+                visible: true
+            });
+       }
+       
+
 
       function fetch_data(query){
           $.ajax({

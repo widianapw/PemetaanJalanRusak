@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\BrokenRoads;
 use App\DetailCoordinate;
+use App\DetailDigitasi;
+use App\DigitasiJalan;
 use Illuminate\Http\Request;
 use App\Quotation;
 use Auth;
@@ -27,12 +29,33 @@ class BrokenRoadsController extends Controller
     }
 
     public function getJalanPengaduan(){
-        $roadData = BrokenRoads::select('tb_broken_road.id','address','picture','description','latitude','longitude')
-        ->join('tb_detail_coordinate','tb_broken_road.id','=','tb_detail_coordinate.id_road')
-        ->where('tb_broken_road.status','0')
-        ->get();
-        return response()->json($roadData);
+        $data = DigitasiJalan::with('detailDigitasi')->get();
+        return $data;
+        // $roadData = BrokenRoads::select('tb_broken_road.id','address','picture','description','latitude','longitude')
+        // ->join('tb_detail_coordinate','tb_broken_road.id','=','tb_detail_coordinate.id_road')
+        // ->where('tb_broken_road.status','0')
+        // ->get();
+        // return response()->json($roadData);
     }
+
+    public function getDetailJalanPengaduan($jalan){
+        $dataCount = BrokenRoads::where('jalan',$jalan)->where('status','0')->count();
+        $dataJalan = BrokenRoads::with('detailCoordinate')->where('jalan',$jalan)->where('status','0')->get();
+        return response()->json(["jumlah"=>$dataCount, "data"=>$dataJalan]);
+    }
+
+    public function detailJalanPengaduan($jalan){
+        $dataCountPengaduan = BrokenRoads::where('jalan',$jalan)->where('status','0')->count();
+        $dataCountDiverifikasi = BrokenRoads::where('jalan',$jalan)->where('status','1')->count();
+        $dataCountDiperbaiki = BrokenRoads::where('jalan',$jalan)->where('status','2')->count();
+        $dataJalanPengaduan = BrokenRoads::with('detailCoordinate')->where('jalan',$jalan)->where('status','0')->get();
+        $dataJalanDiverifikasi = BrokenRoads::with('detailCoordinate')->where('jalan',$jalan)->where('status','1')->get();
+        $dataJalanDiperbaiki = BrokenRoads::with('detailCoordinate')->where('jalan',$jalan)->where('status','2')->get();
+        
+        // return $dataJalanPengaduan;
+        return view("road.index", compact("dataCountPengaduan","dataCountDiverifikasi","dataCountDiperbaiki","dataJalanPengaduan","dataJalanDiverifikasi","dataJalanDiperbaiki"));
+    }
+
 
     public function getJalanTerverifikasi(){
         $data = BrokenRoads::with('detailCoordinate')->where('status','1')->get();
@@ -42,6 +65,11 @@ class BrokenRoadsController extends Controller
         // ->where('tb_broken_road.status','1')
         // ->get();
         // return response()->json($roadData);
+    }
+    public function getDetailJalanTerverifikasi($jalan){
+        $dataCount = BrokenRoads::where('jalan',$jalan)->where('status','1')->count();
+        $dataJalan = BrokenRoads::with('detailCoordinate')->where('jalan',$jalan)->where('status','1')->get();
+        return response()->json(["jumlah"=>$dataCount, "data"=>$dataJalan]);
     }
 
     public function getJalanDiperbaiki(){
@@ -53,6 +81,12 @@ class BrokenRoadsController extends Controller
         // ->get();
         // return response()->json($roadData);
     }
+    public function getDetailJalanDiperbaiki($jalan){
+        $dataCount = BrokenRoads::where('jalan',$jalan)->where('status','2')->count();
+        $dataJalan = BrokenRoads::with('detailCoordinate')->where('jalan',$jalan)->where('status','2')->get();
+        return response()->json(["jumlah"=>$dataCount, "data"=>$dataJalan]);
+    }
+    
 
     public function mapPengaduan(){
         return view('map.mapPengaduan');
@@ -96,6 +130,9 @@ class BrokenRoadsController extends Controller
         $road->address = $request->address;
         $road->picture = $request->picture;
         $road->status = "0";
+        $road->jalan = $request->jalan;
+        $road->kecamatan = $request->kecamatan;
+        $road->kota = $request->kota;
         $road->description = $request->description;
 
         if($request->hasfile('filename'))
@@ -166,7 +203,10 @@ class BrokenRoadsController extends Controller
     {
         DetailCoordinate::where('id_road',$id)->delete();
         BrokenRoads::find($id)->delete();
-        return redirect('/riwayatPengaduan');
+        if(Auth::user()->user_role=="user"){
+            return redirect('/riwayatPengaduan');
+        }
+        return redirect('/admin/listPengaduan');
     }
 
     public function listJalanRusak()
@@ -175,6 +215,7 @@ class BrokenRoadsController extends Controller
         ->join('tb_detail_coordinate','tb_broken_road.id','=','tb_detail_coordinate.id_road')
         ->orderBy('tb_broken_road.id','desc')
         ->get();
+        // return $data;
         return view('admin.listJalanRusak',compact('data'));
     }
 
