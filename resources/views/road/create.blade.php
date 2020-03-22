@@ -1,11 +1,11 @@
-@extends('layouts.layout')
+@extends('layout_new.maps')
 
 @section('title','Pengaduan')
 @section('judul','Ajukan Pengaduan')
 @section('content')
 <style>
     #mapPicker{
-        height: 600px;
+        height: 500px;
         width: 100%;
     }
 </style>

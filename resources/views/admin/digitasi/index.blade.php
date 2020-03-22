@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+@extends('layout_new.maps')
 
 @section('title','Digitasi Jalan')
 @section('judul','Digitasi Jalan')

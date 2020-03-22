@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+@extends('layout_new.maps')
 
 @section('title','Detail Jalan')
 @section('judul','Detail Jalan')
@@ -31,7 +31,7 @@
                         <th>Alamat</th>
                         <th>Deskripsi</th>
                         <th>Tanggal Pengaduan</th>
-                        <th>Aksi</th>
+                        {{-- <th>Aksi</th> --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -43,12 +43,12 @@
                         <td>{{$m->description}}
                         </td>
                         <th>{{$m->created_at}}</th>
-                        <td>
+                        {{-- <td>
                             
-                            <button data-toggle='modal' data-target='#myModal' data-lat="" id="streetView" class="btn btn-primary">
+                            <button data-toggle='modal' data-target='#myModal' data-lat="{{$m}}" id="streetView" class="btn btn-primary">
                                 Street View
                             </button>
-                        </td>
+                        </td> --}}
                         
                     </tr>
                     
@@ -69,7 +69,7 @@
                         <th>Alamat</th>
                         <th>Deskripsi</th>
                         <th>Tanggal Diverifikasi</th>
-                        <th>Aksi</th>
+                        {{-- <th>Aksi</th> --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -81,12 +81,12 @@
                         <td>{{$m->description}}
                         </td>
                         <th>{{$m->updated_at}}</th>
-                        <td>
+                        {{-- <td>
                             {{-- {{$m->detail_coordinate["0"]->latitude}} --}}
                             <button data-toggle='modal' data-target='#myModal' data-lat="" id="streetView" class="btn btn-primary">
                                 Street View
                             </button>
-                        </td>
+                        </td> 
                         
                     </tr>
                     
@@ -107,7 +107,7 @@
                         <th>Alamat</th>
                         <th>Deskripsi</th>
                         <th>Tanggal Diperbaiki</th>
-                        <th>Aksi</th>
+                        {{-- <th>Aksi</th> --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -119,12 +119,12 @@
                         <td>{{$m->description}}
                         </td>
                         <th>{{$m->updated_at}}</th>
-                        <td>
-                            {{-- {{$m->detail_coordinate["0"]->latitude}} --}}
+                        {{-- <td>
+                            {{$m->detail_coordinate["0"]->latitude}}
                             <button data-toggle='modal' data-target='#myModal' data-lat="" id="streetView" class="btn btn-primary">
                                 Street View
                             </button>
-                        </td>
+                        </td> --}}
                         
                     </tr>
                     

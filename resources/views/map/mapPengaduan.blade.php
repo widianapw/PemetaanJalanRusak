@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+@extends('layout_new.maps')
 
 @section('title','Map Jalan Rusak Pengaduan')
 @section('judul','Map Jalan Rusak Pengaduan')
@@ -6,11 +6,12 @@
 @section('content')
 <style>
     #map {
+        margin-top: -20px;
         height: 500px;
-        width: 100%;
+        width: auto;
     }
 </style>
-<input type="text" class="form-control" id="search" placeholder="Search..."><br>
+<input type="text" class="form-control" id="search" placeholder="Search..."><br><br>
 <div id="map"></div>
 <div class="modal fade" id="myModal">
     <div class="modal-dialog">
@@ -129,6 +130,7 @@
                                     +"<hr><button class='btn btn-primary btn-sm' data-toggle='modal' data-target='#myModal' id='streetView'>Street View</button>"
                                     +"<button class='btn btn-success btn-sm' id='detailJalan'>Detail</button>");
                                 infoWindow.open(map);
+                                map.setZoom(18);
                                 map.setCenter(e.latLng);
                                 $(document).on('click','#detailJalan',function(){
                                     window.location="detailJalan/"+response[i].nama;

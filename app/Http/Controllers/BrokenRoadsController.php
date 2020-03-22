@@ -211,10 +211,16 @@ class BrokenRoadsController extends Controller
 
     public function listJalanRusak()
     {
+        
         $data = BrokenRoads::select('tb_broken_road.id','address','picture','description','latitude','longitude','status')
         ->join('tb_detail_coordinate','tb_broken_road.id','=','tb_detail_coordinate.id_road')
+        ->join('tb_digitasi_jalan','tb_broken_road.jalan','=','tb_digitasi_jalan.nama')
+        ->where('tb_digitasi_jalan.id_admin',Auth::user()->id)
         ->orderBy('tb_broken_road.id','desc')
+        
         ->get();
+
+        
         // return $data;
         return view('admin.listJalanRusak',compact('data'));
     }
