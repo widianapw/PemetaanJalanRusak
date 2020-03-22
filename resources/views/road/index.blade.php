@@ -3,7 +3,7 @@
 @section('title','Detail Jalan')
 @section('judul','Detail Jalan')
 @section('content')
-<h3>{{$dataJalanPengaduan[0]->jalan}},{{$dataJalanPengaduan[0]->kecamatan}},{{$dataJalanPengaduan[0]->kota}}</h3>
+<h3>{{$dataJalan->nama}},{{$dataJalan->kecamatan}},{{$dataJalan->kota}}</h3>
 
 <ul class="nav nav-tabs">
     <li class="nav-item">

@@ -51,9 +51,9 @@ class BrokenRoadsController extends Controller
         $dataJalanPengaduan = BrokenRoads::with('detailCoordinate')->where('jalan',$jalan)->where('status','0')->get();
         $dataJalanDiverifikasi = BrokenRoads::with('detailCoordinate')->where('jalan',$jalan)->where('status','1')->get();
         $dataJalanDiperbaiki = BrokenRoads::with('detailCoordinate')->where('jalan',$jalan)->where('status','2')->get();
-        
+        $dataJalan = DigitasiJalan::where('nama',$jalan)->first();
         // return $dataJalanPengaduan;
-        return view("road.index", compact("dataCountPengaduan","dataCountDiverifikasi","dataCountDiperbaiki","dataJalanPengaduan","dataJalanDiverifikasi","dataJalanDiperbaiki"));
+        return view("road.index", compact("dataJalan","dataCountPengaduan","dataCountDiverifikasi","dataCountDiperbaiki","dataJalanPengaduan","dataJalanDiverifikasi","dataJalanDiperbaiki"));
     }
 
 
