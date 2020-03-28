@@ -40,7 +40,7 @@ class BrokenRoadsController extends Controller
 
     public function getDetailJalanPengaduan($jalan){
         $dataCount = BrokenRoads::where('jalan',$jalan)->where('status','0')->count();
-        $dataJalan = BrokenRoads::with('detailCoordinate')->where('jalan',$jalan)->where('status','0')->get();
+        $dataJalan = BrokenRoads::with('detailCoordinate')->where('jalan','LIKE',$jalan)->where('status','0')->get();
         return response()->json(["jumlah"=>$dataCount, "data"=>$dataJalan]);
     }
 

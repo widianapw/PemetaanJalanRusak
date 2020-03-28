@@ -41,16 +41,10 @@
         
         map = new google.maps.Map(document.getElementById('map'), {
             disableDefaultUI: true,
-            center: {lat:-8.796253, lang:115.176385},
-            zoom: 14,
+            center: {lat: -8.672716,lng: 115.226089},
+            zoom: 13,
             styles: styles['hide']
         });
-        var pos = {  
-            lat: -8.672716,
-            lng: 115.226089,
-        };
-        map.setZoom(13);
-        map.setCenter(pos);
         
         var input = document.getElementById('search');
         var searchBox = new google.maps.places.SearchBox(input);
@@ -101,12 +95,11 @@
             dataType: 'json',
             success: function(response){
                 $.each(response, function(i, obj){
-                    
                     var poly = new google.maps.Polyline({
                         geodesic: true,
                         strokeColor: '#FF0000',
-                        strokeOpacity: 2.0,
-                        strokeWeight: 5
+                        strokeOpacity: 1.0,
+                        strokeWeight: 2
                     });
                     poly.setMap(map)
                     var path = [];
@@ -125,13 +118,15 @@
                             dataType: 'json',
                             success: function(response1){
                                 infoWindow.setPosition(e.latLng);
-                                console.log(response1.jumlah)
-                                infoWindow.setContent("<b>"+response[i].nama+"</b><br>jumlah Pengaduan: "+response1.jumlah
-                                    +"<hr><button class='btn btn-primary btn-sm' data-toggle='modal' data-target='#myModal' id='streetView'>Street View</button>"
-                                    +"<button class='btn btn-success btn-sm' id='detailJalan'>Detail</button>");
+                                console.log(response[i].nama)
+                                console.log(response1)
+                                infoWindow.setContent("<div style='margin-bottom:-20px'><b>"+response[i].nama+"</b><br>jumlah Pengaduan: "+response1.jumlah+"</div>"
+                                    +"<hr><div style='margin-top:-20px'><button class='btn btn-primary btn-sm' data-toggle='modal' data-target='#myModal' id='streetView'>Street View</button>"
+                                    +"<button class='btn btn-success btn-sm' id='detailJalan'>Detail</button></div>");
                                 infoWindow.open(map);
                                 map.setZoom(18);
                                 map.setCenter(e.latLng);
+                                
                                 $(document).on('click','#detailJalan',function(){
                                     window.location="detailJalan/"+response[i].nama;
                                 });
@@ -144,8 +139,8 @@
                                     });
                                     marker.addListener('click',function(a){
                                         infoWindow.setPosition(a.latLng)
-                                        infoWindow.setContent("<div style='text-align:center'><img height='100px' alt='...' width = 'auto' src={{asset('images/small')}}/"+detailMarker[i].picture+"></div>"
-                                        +"<hr><button class='btn-success btn-block' id='streetView1' data-toggle='modal' data-target='#myModal'>360 View</button>");
+                                        infoWindow.setContent("<div style='text-align:center; margin-bottom:-20px;'><img height='200px' alt='...' width = 'auto' src={{asset('images/small')}}/"+detailMarker[k].picture+"><br><br><b>Deskripsi : </b>"+detailMarker[k].description+"</div>"
+                                        +"<hr><button style='margin-top:-20px' class='btn-success btn-block btn-sm' id='streetView1' data-toggle='modal' data-target='#myModal'>360 View</button>");
                                         infoWindow.setMap(map);
                                         $(document).on('click','#streetView1',function(){
                                             panoramaView(a.latLng);
@@ -161,9 +156,23 @@
                         
                     });
 
+                    map.addListener('zoom_changed',function(){
+                        if(map.getZoom() > 19){
+                            poly.setOptions({strokeWeight:10, strokeOpacity:4.0});
+                        }
+                        else if(map.getZoom() > 16){
+                            poly.setOptions({strokeWeight:5, strokeOpacity:2.0});
+                        }
+                        else{
+                            poly.setOptions({strokeWeight:2, strokeOpacity:1.0});
+                        }
+                    });
+
                 });
             }
         });
+
+        
       }
 
       var styles = {
@@ -191,31 +200,7 @@
                 visible: true
             });
        }
-       
-
-
-      function fetch_data(query){
-          $.ajax({
-              url:'getSearchMapPengaduan',
-              method: 'GET',
-              data:{query:query},
-              dataType:'json',
-              success: function(data){
-                  $('tbody').html(data.table_data);
-                  $('#total_records').text(data.total_data);
-              }
-          })
-      }
       
-      $('#search').on('keyup',function(){
-        $('#searchBox').show();
-        var query = $(this).val();
-        if(!this.value){
-            $('#searchBox').hide();
-        }
-        fetch_data(query);
-      });
-
 </script>
 
 @endsection

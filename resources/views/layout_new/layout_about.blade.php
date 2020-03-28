@@ -21,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>
-    @yield('tittle')
+    Tentang Kami
   </title>
   <!-- Favicon -->
   <link href="{{URL::asset('assets/img/brand/favicon.png')}}" rel="icon" type="image/png">
@@ -100,69 +100,7 @@
       </div>
     </div>
   </nav>
-  <div class="main-content">
-    <!-- Navbar -->
-    <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
-      <div class="container-fluid">
-        <!-- Brand -->
-        <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="../index.html">Maps</a>
-        <!-- Form -->
-        {{-- <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
-          <div class="form-group mb-0">
-            <div class="input-group input-group-alternative">
-              <div class="input-group-prepend">
-                <span class="input-group-text"><i class="fas fa-search"></i></span>
-              </div>
-              <input class="form-control" placeholder="Search" type="text">
-            </div>
-          </div>
-        </form> --}}
-        <!-- User -->
-        {{-- <ul class="navbar-nav align-items-center d-none d-md-flex">
-          <li class="nav-item dropdown">
-            <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <div class="media align-items-center">
-                <span class="avatar avatar-sm rounded-circle">
-                  <img alt="Image placeholder" src="../assets/img/theme/team-4-800x800.jpg">
-                </span>
-                <div class="media-body ml-2 d-none d-lg-block">
-                  <span class="mb-0 text-sm  font-weight-bold">Administrator</span>
-                </div>
-              </div>
-            </a>    
-          </li>
-        </ul> --}}
-      </div>
-    </nav>
-    <!-- End Navbar -->
-    <!-- Header -->
-    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
-    
-    </div>
-    <div class="container-fluid mt--9">
-      <div class="row">
-        <div class="col">
-          <div class="card shadow border-0" style="padding:20px">
-              <br>
-              <h1 style="text-align:center">@yield('judul')</h1><hr>
-              @yield('content')
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Footer -->
-      <!-- Footer -->
-      {{-- <footer class="footer">
-        <div class="row align-items-center justify-content-xl-between">
-          <div class="col-xl-6">
-            <div class="copyright text-center text-xl-left text-muted">
-              &copy; 2018 <a href="#" class="font-weight-bold ml-1" target="_blank">Creative Tim</a>
-            </div>
-          </div>
-          
-      </footer> --}}
-    </div>
-  </div>
+  @yield('content')
   <!--   Core   -->
   <script src="{{URL::asset('assets/js/plugins/jquery/dist/jquery.min.js')}}"></script>
   <script src="{{URL::asset('assets/js/plugins/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
