@@ -15,7 +15,7 @@ class DigitasiJalanController extends Controller
      */
     public function index()
     {
-        $data = DigitasiJalan::get();
+        $data = DigitasiJalan::orderBy('id','desc')->get();
         return view('admin.digitasi.index', compact('data'));
     }
 

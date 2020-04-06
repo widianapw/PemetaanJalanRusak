@@ -27,7 +27,7 @@
                     <form action="/admin/digitasiJalan/{{$m->id}}" method="POST">
                         @method("DELETE")
                         @csrf
-                        <button type="submit" class="btn btn-danger">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?');">
                             <i class="fa fa-fw fa-trash"></i>
                         </button>
                     </form>

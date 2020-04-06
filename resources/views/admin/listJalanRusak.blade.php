@@ -36,7 +36,7 @@
                 <form action="/jalan/{{$m->id}}" method="post">
                     @csrf
                     @method('DELETE')
-                    <button class="btn btn-danger" type="submit"><i class="fa fa-trash"></i></button>
+                    <button class="btn btn-danger" type="submit" onclick="return confirm('Are you sure you want to delete this item?');"> <i class="fa fa-trash"></i></button>
                 </form>
                 </td>
             </tr>

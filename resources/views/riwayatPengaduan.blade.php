@@ -32,13 +32,20 @@
                 </td>
                 <th>{{$m->created_at}}</th>
                 <td>
-                    <form action="/jalan/{{$m->id}}/" method="POST">
-                        @method("DELETE")
-                        @csrf
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fa fa-fw fa-trash"></i>
-                        </button>
-                    </form>
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group" role="group">
+                            @if($m->status == '0')
+                                <a href="/jalan/{{$m->id}}/edit"><button type="submit" class="btn btn-warning"><i class="fa fa-fw fa-pen"></i></button></a>
+                            @endif
+                            <form action="/jalan/{{$m->id}}/" method="POST">
+                                @method("DELETE")
+                                @csrf
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?');">
+                                    <i class="fa fa-fw fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </td>
             </tr>
             @endforeach

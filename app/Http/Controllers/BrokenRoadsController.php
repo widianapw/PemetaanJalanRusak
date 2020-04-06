@@ -173,9 +173,13 @@ class BrokenRoadsController extends Controller
      * @param  \App\BrokenRoads  $brokenRoads
      * @return \Illuminate\Http\Response
      */
-    public function edit(BrokenRoads $brokenRoads)
+    public function edit($id)
     {
-        //
+        $data = BrokenRoads::select('tb_broken_road.id','address','picture','description','latitude','jalan','kecamatan','kota','longitude','status','tb_broken_road.created_at')
+        ->join('tb_detail_coordinate','tb_broken_road.id','=','tb_detail_coordinate.id_road')
+        ->where('tb_broken_road.id',$id)
+        ->first();
+        return view("road.edit",compact("data"));
     }
 
     /**
@@ -185,6 +189,36 @@ class BrokenRoadsController extends Controller
      * @param  \App\BrokenRoads  $brokenRoads
      * @return \Illuminate\Http\Response
      */
+    public function updateJalan(Request $request, $id)
+    {
+        $road = BrokenRoads::find($id);
+        $road->address = $request->address;
+        $road->picture = $request->picture;
+        $road->jalan = $request->jalan;
+        $road->kecamatan = $request->kecamatan;
+        $road->kota = $request->kota;
+        $road->description = $request->description;
+        if($request->hasfile('filename'))
+        {
+            foreach($request->file('filename') as $image)
+            {
+                $name=$image->getClientOriginalName();
+                $small_image_path=public_path('images/small/'.$name);
+                Image::make($image)->resize(300,300)->save($small_image_path);
+                // $image->move(public_path().'/img/', $name);     
+                $road->picture = $name;
+            }
+        }
+        $road->save();
+
+        $coordinate = DetailCoordinate::where('id_road',$id)->first();
+        $coordinate->latitude = $request->latitude;
+        $coordinate->longitude = $request->longitude;
+        $coordinate->save();
+
+        return redirect('/riwayatPengaduan');
+    }
+
     public function update(Request $request, $id)
     {
         $jalan = BrokenRoads::find($id);

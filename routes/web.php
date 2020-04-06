@@ -26,6 +26,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('/jalan','BrokenRoadsController');
+Route::put('/editJalan/{id}','BrokenRoadsController@updateJalan');
 Route::get('/getJalanPengaduan', 'BrokenRoadsController@getJalanPengaduan');
 Route::get('getDetailJalanPengaduan/{jalan}', 'BrokenRoadsController@getDetailJalanPengaduan');
 

@@ -9,15 +9,15 @@
         width: 100%;
     }
 </style>
-<form enctype="multipart/form-data" action="/jalan" method="POST" class="form-group">
+<form enctype="multipart/form-data" action="/editJalan/{{$data->id}}" method="POST" class="form-group">
     @csrf
+    @method('PUT')
     <div class="form-body">
 
         <div class="form-label">
             <label for="nim">foto</label>
         </div>
         <input type="file" name="filename[]" class="form-control" required multiple="multiple">
-
         <br>
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
             Select on Map
@@ -27,34 +27,34 @@
         <div class="form-label">
             <label for="nim">Latitude</label>
         </div>
-        <input id="latInput" type="text" class="form-control readonly" name="latitude"  required />
+        <input id="latInput" type="text" value="{{$data->latitude}}" class="form-control readonly" name="latitude"  required />
 
         <br>
         <div class="form-label">
             <label for="nim">Longitude</label>
         </div>
-        <input id="lngInput" type="text" class="form-control readonly" name="longitude" required />
+        <input id="lngInput" type="text" value="{{$data->longitude}}" class="form-control readonly" name="longitude" required />
 
         <br>
         <div class="form-label">
             <label for="nim">Address</label>
         </div>
-        <textarea id="addressInput" type="text" class="form-control readonly" name="address"  required></textarea>
+        <textarea id="addressInput" type="text" class="form-control readonly" name="address"  required>{{$data->address}}</textarea>
 
         <br>
         <div class="form-label">
             <label for="nim">Deskripsi</label>
         </div>
-        <textarea type="text" class="form-control" name="description" required></textarea>
+        <textarea type="text" class="form-control" name="description" required>{{$data->description}}</textarea>
         
         <br>
         <div class="form-footer">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
 
-        <input type="text" id="jalanInput" name="jalan" hidden>
-        <input type="text" id="kecamatanInput" name="kecamatan" hidden>
-        <input type="text" id="kotaInput" name="kota" hidden>
+        <input type="text" id="jalanInput" name="jalan" value="{{$data->jalan}}" hidden>
+        <input type="text" id="kecamatanInput" name="kecamatan" value="{{$data->kecamatan}}" hidden>
+        <input type="text" id="kotaInput" name="kota" value="{{$data->kecamatan}}" hidden>
 </form>
 
 <div class="modal fade" id="myModal">
@@ -69,7 +69,6 @@
 
             <!-- Modal body -->
             <div class="modal-body">
-                {{-- <input type="text" class="form-control" id="search" placeholder="Search..."><br> --}}
                 <div id="mapPicker"></div>
             </div>
 
@@ -91,15 +90,8 @@
             center: {lat:-8.672716, lng:115.226089},
             zoom: 13
         });
+        
         geocoder = new google.maps.Geocoder();
-
-        infoWindow = new google.maps.InfoWindow;
-        function setMapOnAll(map) {
-            for (var i = 0; i < markers.length; i++) {
-            markers[i].setMap(map);
-            }
-        }
-        // Try HTML5 geolocation.
         // if (navigator.geolocation) {
         //     navigator.geolocation.getCurrentPosition(function(position) {
         //     var pos = {
@@ -120,6 +112,12 @@
         //     // Browser doesn't support Geolocation
         //     handleLocationError(false, infoWindow, map.getCenter());
         // }
+        infoWindow = new google.maps.InfoWindow;
+        function setMapOnAll(map) {
+            for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
+            }
+        }
         map.addListener('click',function(e){
             setMapOnAll(null);
             markers=[];
@@ -167,46 +165,6 @@
             });
             });
         })
-        // var input = $('#search')[0];
-        // var input = document.getElementById('search');
-        // var searchBox = new google.maps.places.SearchBox(input);
-        geocoder = new google.maps.Geocoder();
-        var searchs=[];
-        
-        // map.addListener('bounds_changed',function(){
-        //     searchBox.setBounds(map.getBounds());
-        // });
-
-        // searchBox.addListener('places_changed',function(){
-        //     var places = searchBox.getPlaces();
-
-        //     if(places.length === 0)
-        //         return;
-            
-        //     markers.forEach(function(m){
-        //         m.setMap(null);
-        //     });
-        //     markers = [];
-
-        //     var bounds = new google.maps.LatLngBounds();
-
-        //     places.forEach(function(p){
-        //         if(!p.geometry)
-        //             return;
-                
-        //         markers.push(new google.maps.Marker({
-        //             map :map,
-        //             title : p.name,
-        //             position: p.geometry.location
-        //         }));
-
-        //         if(p.geometry.viewport)
-        //             bounds.union(p.geometry.viewport);
-        //         else
-        //             bounds.extend(p.geometry.location);
-        //     });
-        //     map.fitBounds(bounds);
-        // });
     }
 
     $('#submitLatLng').on('click', function(){
@@ -214,7 +172,7 @@
         $('#lngInput').val(lngMap);
         
     });
-    
+
     // function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     // infoWindow.setPosition(pos);
     // infoWindow.setContent(browserHasGeolocation ?

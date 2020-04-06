@@ -89,13 +89,13 @@
         @endif
         <!-- Divider -->
         <hr class="my-3">
-        {{-- <ul class="navbar-nav">
+        <ul class="navbar-nav">
           <li class="nav-item  active ">
             <a class="nav-link " href="/about">
               <i class="fa fa-heart text-red"></i> Tentang Kami
             </a>
           </li>
-        </ul> --}}
+        </ul>
         <!-- Heading -->
       </div>
     </div>
