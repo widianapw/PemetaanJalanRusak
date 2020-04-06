@@ -29,7 +29,8 @@ class BrokenRoadsController extends Controller
     }
 
     public function getJalanPengaduan(){
-        $data = DigitasiJalan::with('detailDigitasi')->get();
+        $k = BrokenRoads::select('jalan')->get();
+        $data = DigitasiJalan::with('detailDigitasi')->whereIn('nama',$k)->get();
         return $data;
         // $roadData = BrokenRoads::select('tb_broken_road.id','address','picture','description','latitude','longitude')
         // ->join('tb_detail_coordinate','tb_broken_road.id','=','tb_detail_coordinate.id_road')
@@ -140,6 +141,7 @@ class BrokenRoadsController extends Controller
             foreach($request->file('filename') as $image)
             {
                 $name=$image->getClientOriginalName();
+                $name = preg_replace('/\s+/', '', $name);
                 $small_image_path=public_path('images/small/'.$name);
                 Image::make($image)->resize(300,300)->save($small_image_path);
                 // $image->move(public_path().'/img/', $name);     
@@ -244,14 +246,12 @@ class BrokenRoadsController extends Controller
     }
 
     public function listJalanRusak()
-    {
-        
-        $data = BrokenRoads::select('tb_broken_road.id','address','picture','description','latitude','longitude','status')
-        ->join('tb_detail_coordinate','tb_broken_road.id','=','tb_detail_coordinate.id_road')
-        ->join('tb_digitasi_jalan','tb_broken_road.jalan','=','tb_digitasi_jalan.nama')
+    {   
+        $data = BrokenRoads::select('tb_broken_road.id','address','picture','description','status')
+        // ->join('tb_detail_coordinate','tb_broken_road.id','=','tb_detail_coordinate.id_road')
+        ->join('tb_digitasi_jalan','tb_broken_road.jalan','LIKE','tb_digitasi_jalan.nama')
         ->where('tb_digitasi_jalan.id_admin',Auth::user()->id)
         ->orderBy('tb_broken_road.id','desc')
-        
         ->get();
 
         

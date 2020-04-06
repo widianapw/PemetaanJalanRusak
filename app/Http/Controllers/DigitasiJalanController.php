@@ -41,6 +41,7 @@ class DigitasiJalanController extends Controller
         $jalan->nama = $request->nama;
         $jalan->kecamatan = $request->kecamatan;
         $jalan->kota = $request->kota;
+        $jalan->id_admin = Auth::user()->id;
         $jalan->save();
 
         foreach($request->koordinat as $k){
